@@ -5,7 +5,7 @@ import itertools, re
 import vigenereCipher, pyperclip, freqAnalysis, detectEnglish
 
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-SILENT_MODE = False # if set to True, program doesn't print attempts
+DEBUG_LEVEL = 1 # 0 = silent; 1 = key length/possible letters; 2 = print every key
 NUM_MOST_FREQ_LETTERS = 4 # attempts this many letters per subkey
 MAX_KEY_LENGTH = 16 # will not attempt keys longer than this
 NONLETTERS_PATTERN = re.compile('[^A-Z]')
@@ -175,7 +175,7 @@ def attemptHackWithKeyLength(ciphertext, mostLikelyKeyLength):
 
         allFreqScores.append(freqScores[:NUM_MOST_FREQ_LETTERS])
 
-    if not SILENT_MODE:
+    if DEBUG_LEVEL > 0:
         for i in range(len(allFreqScores)):
             # use i + 1 so the first letter is not called the "0th" letter
             print('Possible letters for letter %s of the key: ' % (i + 1), end='')
@@ -191,7 +191,7 @@ def attemptHackWithKeyLength(ciphertext, mostLikelyKeyLength):
         for i in range(mostLikelyKeyLength):
             possibleKey += allFreqScores[i][indexes[i]][0]
 
-        if not SILENT_MODE:
+        if DEBUG_LEVEL > 1:
             print('Attempting with key: %s' % (possibleKey))
 
         decryptedText = vigenereCipher.decryptMessage(possibleKey, ciphertextUp)
@@ -225,11 +225,11 @@ def hackVigenere(ciphertext):
     # length of the ciphertext's encryption key is.
     allLikelyKeyLengths = kasiskiExamination(ciphertext)
     hackedMessage = None
-    if not SILENT_MODE:
+    if DEBUG_LEVEL > 0:
         print('Kasiski Examination results say the most likely key lengths are: ' + ', '.join(allLikelyKeyLengths))
 
     for keyLength in allLikelyKeyLengths:
-        if not SILENT_MODE:
+        if DEBUG_LEVEL > 0:
             print('Attempting hack with key length %s (%s possible keys)...' % (keyLength, NUM_MOST_FREQ_LETTERS ** keyLength))
         hackedMessage = attemptHackWithKeyLength(ciphertext, keyLength)
         if hackedMessage != None:
@@ -238,12 +238,12 @@ def hackVigenere(ciphertext):
     # If none of the key lengths we found using Kasiski Examination
     # worked, start brute-forcing through key lengths.
     if hackedMessage == None:
-        if not SILENT_MODE:
+        if DEBUG_LEVEL > 0:
             print('Unable to hack message with likely key length(s). Brute forcing key length...')
         for keyLength in range(1, MAX_KEY_LENGTH + 1):
             # don't re-check key lengths already tried from Kasiski
             if keyLength not in allLikelyKeyLengths:
-                if not SILENT_MODE:
+                if DEBUG_LEVEL > 0:
                     print('Attempting hack with key length %s (%s possible keys)...' % (keyLength, NUM_MOST_FREQ_LETTERS ** keyLength))
                 hackedMessage = attemptHackWithKeyLength(ciphertext, keyLength)
                 if hackedMessage != None:

@@ -225,10 +225,7 @@ def hackVigenere(ciphertext):
     # length of the ciphertext's encryption key is.
     allLikelyKeyLengths = kasiskiExamination(ciphertext)
     if not SILENT_MODE:
-        keyLengthStr = ''
-        for keyLength in allLikelyKeyLengths:
-            keyLengthStr += '%s ' % (keyLength)
-        print('Kasiski Examination results say the most likely key lengths are: ' + keyLengthStr + '\n')
+        print('Kasiski Examination results say the most likely key lengths are: ' + ', '.join(allLikelyKeyLengths))
 
     for keyLength in allLikelyKeyLengths:
         if not SILENT_MODE:

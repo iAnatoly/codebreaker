@@ -226,7 +226,7 @@ def hackVigenere(ciphertext):
     allLikelyKeyLengths = kasiskiExamination(ciphertext)
     hackedMessage = None
     if DEBUG_LEVEL > 0:
-        print('Kasiski Examination results say the most likely key lengths are: ' + ', '.join(allLikelyKeyLengths))
+        print('Kasiski Examination results say the most likely key lengths are: ' + ', '.join([str(x) for x in allLikelyKeyLengths]))
 
     for keyLength in allLikelyKeyLengths:
         if DEBUG_LEVEL > 0:

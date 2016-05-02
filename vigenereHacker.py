@@ -224,6 +224,7 @@ def hackVigenere(ciphertext):
     # First, we need to do Kasiski Examination to figure out what the
     # length of the ciphertext's encryption key is.
     allLikelyKeyLengths = kasiskiExamination(ciphertext)
+    hackedMessage = None
     if not SILENT_MODE:
         print('Kasiski Examination results say the most likely key lengths are: ' + ', '.join(allLikelyKeyLengths))
 
